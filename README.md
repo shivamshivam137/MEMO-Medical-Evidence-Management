@@ -14,7 +14,7 @@
 
 ### Current Phase: Frontend Prototype + DevOps Demonstration
 - **Target:** Android Application Prototype (Kotlin, Jetpack Compose, Material 3, MVVM).
-- **Data Source:** In-Memory Typed Repository with 12 Longitudinal Fictional Patient Records for *"Aarav Mehta"*.
+- **Data Source:** In-Memory Typed Repository with 12 Longitudinal Fictional Patient Records for *"Shivam Singh"*.
 - **DevOps:** Jira Scrum Board, Git-Flow, Dockerized Build Tooling, and Automated Jenkins CI/CD.
 - **Future Integration:** Architecture built on clean Repository interfaces (`IMemoRepository`) designed for zero-refactor swap to FastAPI + Supabase backend.
 

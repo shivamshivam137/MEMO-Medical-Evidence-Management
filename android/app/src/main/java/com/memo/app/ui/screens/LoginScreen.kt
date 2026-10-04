@@ -150,7 +150,7 @@ fun LoginScreen(
                     border = ButtonDefaults.outlinedButtonBorder.copy(brush = androidx.compose.ui.graphics.SolidColor(Teal600))
                 ) {
                     Text(
-                        text = "Continue with Demo (Aarav Mehta)",
+                        text = "Continue with Demo (Shivam Singh)",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = Teal700
