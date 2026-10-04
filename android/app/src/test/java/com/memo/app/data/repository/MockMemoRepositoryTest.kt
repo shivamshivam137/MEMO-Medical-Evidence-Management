@@ -20,7 +20,9 @@ class MockMemoRepositoryTest {
     fun testRepositoryInitialization_hasReports() = runTest {
         val reports = repository.getReports().first()
         assertTrue("Reports list should not be empty", reports.isNotEmpty())
-        assertEquals("Initial dataset should have at least 12 records", 12, reports.size)
+        // DemoDataSource is a singleton; other tests may add records via uploadReport.
+        // We assert >= 12 to remain stable regardless of test execution order.
+        assertTrue("Initial dataset should have at least 12 records", reports.size >= 12)
     }
 
     @Test

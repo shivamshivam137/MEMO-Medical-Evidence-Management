@@ -69,6 +69,16 @@ fun SplashScreen(
                 color = SurfaceWhite
             )
 
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = "Medical Evidence Management & Organization",
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Medium,
+                color = Teal300,
+                letterSpacing = 0.5.sp
+            )
+
             Spacer(modifier = Modifier.height(6.dp))
 
             Text(

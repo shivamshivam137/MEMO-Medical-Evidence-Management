@@ -11,8 +11,8 @@ object DemoDataSource {
 
     val currentUser = User(
         id = "usr-001",
-        name = "Aarav Mehta",
-        email = "aarav.mehta@memo.demo",
+        name = "Shivam Singh",
+        email = "shivam.singh@memo.demo",
         memberSince = "June 2025",
         bloodGroup = "B+",
         age = 42,

@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 data class AuthUiState(
-    val email: String = "aarav.mehta@memo.demo",
+    val email: String = "shivam.singh@memo.demo",
     val pass: String = "demo1234",
     val isLoading: Boolean = false,
     val isLoggedIn: Boolean = false,
@@ -50,7 +50,7 @@ class AuthViewModel(
 
     fun loginWithDemo() {
         _uiState.value = _uiState.value.copy(
-            email = "aarav.mehta@memo.demo",
+            email = "shivam.singh@memo.demo",
             pass = "demo1234"
         )
         login()

@@ -67,6 +67,15 @@ fun LoginScreen(
                 )
 
                 Text(
+                    text = "Medical Evidence Management & Organization",
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Teal600
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
                     text = "Sign in to access your personal medical archive",
                     style = MaterialTheme.typography.bodySmall,
                     color = Slate500
@@ -150,7 +159,7 @@ fun LoginScreen(
                     border = ButtonDefaults.outlinedButtonBorder.copy(brush = androidx.compose.ui.graphics.SolidColor(Teal600))
                 ) {
                     Text(
-                        text = "Continue with Demo (Aarav Mehta)",
+                        text = "Continue with Demo (Shivam Singh)",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = Teal700
