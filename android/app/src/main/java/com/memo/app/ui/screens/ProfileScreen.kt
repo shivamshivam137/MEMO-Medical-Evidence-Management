@@ -126,6 +126,13 @@ fun ProfileScreen(
                     color = Slate900
                 )
 
+                Text(
+                    text = "MEMO — Medical Evidence Management & Organization",
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.Medium,
+                    color = Teal700
+                )
+
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(

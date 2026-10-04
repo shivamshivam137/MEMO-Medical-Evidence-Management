@@ -67,6 +67,15 @@ fun LoginScreen(
                 )
 
                 Text(
+                    text = "Medical Evidence Management & Organization",
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Teal600
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
                     text = "Sign in to access your personal medical archive",
                     style = MaterialTheme.typography.bodySmall,
                     color = Slate500
