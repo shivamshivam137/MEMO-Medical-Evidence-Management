@@ -1,0 +1,30 @@
+# MEMO Android CI Build Environment
+# Purpose: Reproducible Android build environment container for Jenkins & Docker builds
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV ANDROID_HOME=/opt/android-sdk
+ENV PATH=${PATH}:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/platform-tools
+
+# Install base dependencies and OpenJDK 17
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    openjdk-17-jdk \
+    curl \
+    unzip \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Android Command-line Tools
+RUN mkdir -p ${ANDROID_HOME}/cmdline-tools && \
+    curl -o /tmp/cmdline-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip && \
+    unzip /tmp/cmdline-tools.zip -d ${ANDROID_HOME}/cmdline-tools && \
+    mv ${ANDROID_HOME}/cmdline-tools/cmdline-tools ${ANDROID_HOME}/cmdline-tools/latest && \
+    rm /tmp/cmdline-tools.zip
+
+# Accept licenses and install platform-tools, build-tools 34, and android-34
+RUN yes | sdkmanager --licenses && \
+    sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+
+WORKDIR /workspace
+
+CMD ["/bin/bash"]
