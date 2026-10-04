@@ -75,7 +75,7 @@ fun SplashScreen(
                 text = "Medical Evidence Management & Organization",
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Medium,
-                color = Teal300,
+                color = Teal100,
                 letterSpacing = 0.5.sp
             )
 
