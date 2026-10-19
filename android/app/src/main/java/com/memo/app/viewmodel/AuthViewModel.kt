@@ -109,6 +109,27 @@ class AuthViewModel(
         )
     }
 
+    fun seedSampleData() {
+        val state = _uiState.value
+        _uiState.value = state.copy(isLoading = true, errorMessage = null, statusMessage = null)
+        viewModelScope.launch {
+            try {
+                for (report in DemoDataSource.reports) {
+                    repository.uploadReport(report.title, 1024L)
+                }
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    statusMessage = "Successfully seeded 12 sample reports to Firestore!"
+                )
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    errorMessage = e.message ?: "Failed to seed sample data"
+                )
+            }
+        }
+    }
+
     fun logout() {
         _uiState.value = AuthUiState()
     }

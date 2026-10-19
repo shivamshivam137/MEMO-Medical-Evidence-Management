@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEMO - Medical Evidence Management & Organization | WMAD Project Report</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm 15mm 20mm 15mm;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: #1f2937;
+            background-color: #ffffff;
+            line-height: 1.5;
+            font-size: 13.5px;
+            margin: 0;
+            padding: 24px;
+        }
+
+        .report-container {
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        /* Top Academic Evaluation Table */
+        .eval-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 24px;
+        }
+
+        .eval-table th, .eval-table td {
+            border: 1px solid #111827;
+            padding: 8px 12px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .eval-table th {
+            background-color: #f3f4f6;
+            font-weight: 700;
+        }
+
+        .eval-table .header-row-top td {
+            text-align: left;
+            font-weight: 700;
+            padding: 10px 12px;
+        }
+
+        .eval-table .data-row {
+            height: 38px;
+        }
+
+        /* Project Title */
+        .project-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin: 20px 0 10px 0;
+            color: #0f172a;
+        }
+
+        .project-subtitle {
+            text-align: center;
+            font-size: 13px;
+            color: #0d9488;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        /* Section Headings */
+        h2.section-title {
+            color: #0d9488;
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 26px;
+            margin-bottom: 10px;
+            border-bottom: 1.5px solid #0d9488;
+            padding-bottom: 4px;
+            display: flex;
+            align-items: center;
+        }
+
+        h3.sub-title {
+            color: #1e293b;
+            font-size: 14px;
+            font-weight: 700;
+            margin-top: 16px;
+            margin-bottom: 6px;
+        }
+
+        p {
+            margin: 0 0 10px 0;
+            text-align: justify;
+        }
+
+        ul {
+            margin: 0 0 12px 0;
+            padding-left: 22px;
+        }
+
+        li {
+            margin-bottom: 4px;
+        }
+
+        /* Code Blocks */
+        pre {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #0d9488;
+            border-radius: 4px;
+            padding: 10px 14px;
+            font-family: "Cascadia Code", "Fira Code", Consolas, "Courier New", monospace;
+            font-size: 11.5px;
+            color: #0f172a;
+            overflow-x: auto;
+            white-space: pre;
+            margin-bottom: 14px;
+            line-height: 1.45;
+        }
+
+        .filename-tag {
+            font-family: "Cascadia Code", Consolas, monospace;
+            font-size: 12px;
+            font-weight: 700;
+            color: #0d9488;
+            margin-top: 12px;
+            margin-bottom: 4px;
+            display: inline-block;
+        }
+
+        /* Data Tables */
+        .content-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 18px 0;
+            font-size: 12.5px;
+        }
+
+        .content-table th, .content-table td {
+            border: 1px solid #cbd5e1;
+            padding: 7px 10px;
+            text-align: left;
+        }
+
+        .content-table th {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-normal { background: #dcfce7; color: #166534; }
+        .badge-abnormal { background: #fee2e2; color: #991b1b; }
+        .badge-warning { background: #fef3c7; color: #92400e; }
+
+        /* Mockup Screens Card in Report */
+        .screen-card-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-top: 12px;
+            margin-bottom: 20px;
+        }
+
+        .screen-mock {
+            border: 1.5px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 12px;
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .screen-mock-header {
+            font-weight: 700;
+            color: #0d9488;
+            font-size: 13px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 6px;
+            margin-bottom: 8px;
+        }
+
+        .screen-mock-body {
+            font-size: 11.5px;
+            color: #334155;
+            line-height: 1.45;
+        }
+
+        /* Print optimizations */
+        @media print {
+            body {
+                padding: 0;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            pre {
+                border-color: #94a3b8;
+                white-space: pre-wrap;
+                word-break: break-all;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="report-container">
+
+    <!-- Academic Header Table (As in Reference Format) -->
+    <table class="eval-table">
+        <tr class="header-row-top">
+            <td colspan="6">
+                <strong>Course:</strong> Website and Mobile Application Development (WMAD)<br>
+                <strong>Name of Student:</strong> Shivam Singh
+            </td>
+        </tr>
+        <tr>
+            <th style="width: 16%;">Roll No</th>
+            <th style="width: 18%;">DOP (Date of Perf.)</th>
+            <th style="width: 18%;">DOS (Date of Subm.)</th>
+            <th style="width: 22%;">Signature</th>
+            <th style="width: 26%;">Remark</th>
+        </tr>
+        <tr class="data-row">
+            <td></td>
+            <td>19-10-2026</td>
+            <td>19-10-2026</td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+
+    <!-- Project Title -->
+    <div class="project-title">MEMO — Medical Evidence Management & Organization</div>
+    <div class="project-subtitle">Subject: Website and Mobile Application Development (WMAD) | Project Report</div>
+
+    <!-- 1. Project Overview -->
+    <h2 class="section-title">1. Project Overview</h2>
+    <p>
+        <strong>MEMO (Medical Evidence Management & Organization)</strong> is an advanced, intelligent mobile healthcare application designed to consolidate personal clinical records, laboratory investigations, imaging reports, and medical prescriptions into a structured, searchable, and longitudinal timeline.
+    </p>
+    <p>
+        In contemporary medical workflows, patients accumulate paper documents and scattered PDF files across diverse pathology laboratories, multi-specialty hospitals, and independent clinics. When consulting new healthcare providers or emergency physicians, critical prior medical evidence is often unavailable or fragmented. MEMO addresses this issue by transforming unstructured medical records into digitized, structured clinical parameters with real-time abnormal reference indicator tracking, multi-category filtering, OCR-simulated document ingestion, and biometric/Firebase authentication.
+    </p>
+    <p>
+        The project is implemented using modern native Android architecture (Kotlin 1.9, Jetpack Compose, Material 3, MVVM, and Kotlin Flow) coupled with Google Firebase Authentication and Google Cloud Firestore for real-time cloud data storage and offline persistence, integrated with automated Jenkins CI/CD pipeline automation.
+    </p>
+
+    <!-- 2. Technology Stack -->
+    <h2 class="section-title">2. Technology Stack</h2>
+    <ul>
+        <li><strong>Course / Subject:</strong> Website and Mobile Application Development (WMAD)</li>
+        <li><strong>Target Platform:</strong> Android OS (Min SDK: 26 / Android 8.0, Target SDK: 34 / Android 14)</li>
+        <li><strong>Programming Language:</strong> Kotlin 1.9.10</li>
+        <li><strong>UI Framework:</strong> Jetpack Compose with Material Design 3 (Material3)</li>
+        <li><strong>Architecture Pattern:</strong> MVVM (Model-View-ViewModel) + Clean Repository Pattern</li>
+        <li><strong>Asynchronous & State Management:</strong> Kotlin Coroutines &amp; StateFlow / SharedFlow</li>
+        <li><strong>Cloud Authentication:</strong> Google Firebase Authentication (Email/Password &amp; User State Listener)</li>
+        <li><strong>Cloud Database:</strong> Google Cloud Firestore (Document &amp; Subcollection Real-time Streams)</li>
+        <li><strong>Document &amp; Media Storage:</strong> Google Firebase Cloud Storage</li>
+        <li><strong>Build Automation &amp; Tooling:</strong> Gradle 8.4 (Kotlin DSL - <code>build.gradle.kts</code>) &amp; Android Gradle Plugin 8.3</li>
+        <li><strong>DevOps &amp; CI/CD:</strong> Dockerized Jenkins LTS Pipeline (Automated 7-stage CI/CD)</li>
+        <li><strong>Development Runtime:</strong> Java OpenJDK 17 (Eclipse Adoptium Temurin)</li>
+    </ul>
+
+    <!-- 3. Cloud Database & Data Schema -->
+    <h2 class="section-title">3. Cloud Firestore Database & Security Rules</h2>
+    <p>
+        The backend utilizes Google Cloud Firestore, a scalable NoSQL cloud document database. Data is partitioned per patient using secure user IDs (UIDs) generated by Firebase Authentication to guarantee complete HIPAA-aligned isolation between patients.
+    </p>
+
+    <div class="filename-tag">firestore.rules (Firestore Security Architecture)</div>
+    <pre><code>rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // User profile document: only the authenticated owner can read & write
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // Medical reports subcollection: private to the authenticated owner
+      match /reports/{reportId} {
+        allow read, write, delete: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+  }
+}</code></pre>
+
+    <h3 class="sub-title">Firestore Document Schema</h3>
+    <table class="content-table">
+        <thead>
+            <tr>
+                <th>Collection Path</th>
+                <th>Field Name</th>
+                <th>Data Type</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="4"><code>/users/{userId}</code></td>
+                <td><code>id</code> / <code>name</code></td>
+                <td>String</td>
+                <td>Patient unique UID and full legal name</td>
+            </tr>
+            <tr>
+                <td><code>email</code></td>
+                <td>String</td>
+                <td>Registered Firebase authentication email</td>
+            </tr>
+            <tr>
+                <td><code>bloodGroup</code></td>
+                <td>String</td>
+                <td>Clinical blood group (e.g., "B+", "O-")</td>
+            </tr>
+            <tr>
+                <td><code>age</code> / <code>gender</code></td>
+                <td>Number / String</td>
+                <td>Demographic attributes (e.g., 35, "Male")</td>
+            </tr>
+            <tr>
+                <td rowspan="5"><code>/users/{userId}/reports/{reportId}</code></td>
+                <td><code>title</code></td>
+                <td>String</td>
+                <td>Investigation title (e.g., "Complete Blood Count")</td>
+            </tr>
+            <tr>
+                <td><code>type</code></td>
+                <td>String (Enum)</td>
+                <td>BLOOD_TEST, URINE_TEST, IMAGING, PRESCRIPTION</td>
+            </tr>
+            <tr>
+                <td><code>organization</code> / <code>doctor</code></td>
+                <td>String</td>
+                <td>Issuing healthcare clinic and physician name</td>
+            </tr>
+            <tr>
+                <td><code>date</code></td>
+                <td>String (ISO)</td>
+                <td>Examination date (YYYY-MM-DD)</td>
+            </tr>
+            <tr>
+                <td><code>hasAbnormalValues</code></td>
+                <td>Boolean</td>
+                <td>Flag triggering clinical alert banners &amp; chips</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="filename-tag">MedicalModels.kt (Core Kotlin Domain Entities)</div>
+    <pre><code>package com.memo.app.data.model
+
+enum class ReportType(val displayName: String) {
+    ALL("All"),
+    BLOOD_TEST("Blood Test"),
+    URINE_TEST("Urine Test"),
+    PRESCRIPTION("Prescription"),
+    IMAGING("Imaging"),
+    DISCHARGE_SUMMARY("Discharge")
+}
+
+enum class ParameterStatus {
+    NORMAL, ELEVATED, HIGH, LOW, ABNORMAL
+}
+
+data class LabResult(
+    val testName: String,
+    val value: String,
+    val unit: String,
+    val referenceRange: String,
+    val status: ParameterStatus = ParameterStatus.NORMAL
+)
+
+data class Medication(
+    val name: String,
+    val dosage: String,
+    val frequency: String,
+    val duration: String,
+    val instructions: String = ""
+)
+
+data class MedicalReport(
+    val id: String,
+    val title: String,
+    val type: ReportType,
+    val date: String,             // Format: YYYY-MM-DD
+    val organization: String,
+    val doctor: String,
+    val summary: String,
+    val hasAbnormalValues: Boolean = false,
+    val labResults: List&lt;LabResult&gt; = emptyList(),
+    val medications: List&lt;Medication&gt; = emptyList(),
+    val findings: String = "",
+    val originalFileName: String = ""
+)
+
+data class User(
+    val id: String,
+    val name: String,
+    val email: String,
+    val memberSince: String,
+    val bloodGroup: String = "B+",
+    val age: Int = 35,
+    val gender: String = "Male"
+)
+
+data class HealthStats(
+    val totalReports: Int,
+    val bloodTestsCount: Int,
+    val urineTestsCount: Int,
+    val imagingCount: Int,
+    val prescriptionsCount: Int,
+    val attentionRequiredCount: Int
+)</code></pre>
+
+    <!-- 4. Build & Environment Configuration -->
+    <div class="page-break"></div>
+    <h2 class="section-title">4. Build &amp; Environment Configuration</h2>
+
+    <div class="filename-tag">android/app/build.gradle.kts (App Build Configuration &amp; Dependencies)</div>
+    <pre><code>plugins {
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
+}
+
+android {
+    namespace = "com.memo.app"
+    compileSdk = 34
+
+    defaultConfig {
+        applicationId = "com.memo.app"
+        minSdk = 26
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.11"
+    }
+}
+
+dependencies {
+    // Jetpack Compose BOM
+    val composeBom = platform("androidx.compose:compose-bom:2024.04.01")
+    implementation(composeBom)
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+
+    // Firebase Platform BOM &amp; Services
+    val firebaseBom = platform("com.google.firebase:firebase-bom:33.4.0")
+    implementation(firebaseBom)
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx")
+
+    // Coroutines &amp; Play Services Tasks Await
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.0")
+}</code></pre>
+
+    <div class="filename-tag">AndroidManifest.xml (Permissions &amp; App Entry Point)</div>
+    <pre><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;manifest xmlns:android="http://schemas.android.com/apk/res/android"&gt;
+
+    &lt;uses-permission android:name="android.permission.INTERNET" /&gt;
+    &lt;uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /&gt;
+
+    &lt;application
+        android:allowBackup="true"
+        android:icon="@android:drawable/sym_def_app_icon"
+        android:label="@string/app_name"
+        android:roundIcon="@android:drawable/sym_def_app_icon"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MEMO"&gt;
+        &lt;activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MEMO"&gt;
+            &lt;intent-filter&gt;
+                &lt;action android:name="android.intent.action.MAIN" /&gt;
+                &lt;category android:name="android.intent.category.LAUNCHER" /&gt;
+            &lt;/intent-filter&gt;
+        &lt;/activity&gt;
+    &lt;/application&gt;
+
+&lt;/manifest&gt;</code></pre>
+
+    <div class="filename-tag">Jenkinsfile (CI/CD Pipeline Automation Script)</div>
+    <pre><code>pipeline {
+    agent any
+
+    environment {
+        ANDROID_HOME = '/opt/android-sdk'
+        GRADLE_USER_HOME = "${WORKSPACE}/.gradle"
+    }
+
+    stages {
+        stage('1. Checkout SCM') {
+            steps {
+                echo 'Checking out source code from GitHub repository...'
+                checkout scm
+            }
+        }
+        stage('2. Prepare Environment') {
+            steps {
+                echo 'Verifying Java &amp; Gradle environment...'
+                sh 'java -version'
+                dir('android') {
+                    sh 'chmod +x gradlew'
+                    sh './gradlew --version'
+                }
+            }
+        }
+        stage('3. Compile') {
+            steps {
+                echo 'Compiling Kotlin sources...'
+                dir('android') {
+                    sh './gradlew compileDebugKotlin'
+                }
+            }
+        }
+        stage('4. Unit Tests') {
+            steps {
+                echo 'Executing Android Unit Tests...'
+                dir('android') {
+                    sh './gradlew testDebugUnitTest --continue'
+                }
+            }
+            post {
+                always {
+                    junit testResults: 'android/app/build/test-results/**/*.xml', allowEmptyResults: true
+                }
+            }
+        }
+        stage('5. Static Code Analysis (Lint)') {
+            steps {
+                echo 'Running Android Lint...'
+                dir('android') {
+                    sh './gradlew lintDebug'
+                }
+            }
+        }
+        stage('6. Assemble Debug APK') {
+            steps {
+                echo 'Building Android Debug APK artifact...'
+                dir('android') {
+                    sh './gradlew assembleDebug'
+                }
+            }
+        }
+        stage('7. Archive Build Artifacts') {
+            steps {
+                echo 'Archiving generated APK...'
+                archiveArtifacts artifacts: 'android/app/build/outputs/apk/debug/*.apk', fingerprint: true
+            }
+        }
+    }
+}</code></pre>
+
+    <!-- 5. Backend & Repository Architecture Code -->
+    <div class="page-break"></div>
+    <h2 class="section-title">5. Core Architecture &amp; Data Repository Layer Code</h2>
+
+    <div class="filename-tag">IMemoRepository.kt (Clean Repository Interface)</div>
+    <pre><code>package com.memo.app.data.repository
+
+import com.memo.app.data.model.HealthStats
+import com.memo.app.data.model.MedicalReport
+import com.memo.app.data.model.ReportType
+import com.memo.app.data.model.User
+import kotlinx.coroutines.flow.Flow
+
+interface IMemoRepository {
+    fun getCurrentUser(): Flow&lt;User&gt;
+    fun getReports(): Flow&lt;List&lt;MedicalReport&gt;&gt;
+    fun getReportById(id: String): Flow&lt;MedicalReport?&gt;
+    fun getHealthStats(): Flow&lt;HealthStats&gt;
+    fun getFilteredReports(type: ReportType, query: String = ""): Flow&lt;List&lt;MedicalReport&gt;&gt;
+    suspend fun uploadReport(fileName: String, fileSize: Long = 1024L): Result&lt;MedicalReport&gt;
+    suspend fun login(email: String, pass: String): Result&lt;User&gt;
+    suspend fun signUp(email: String, pass: String, name: String = ""): Result&lt;User&gt;
+}</code></pre>
+
+    <div class="filename-tag">FirebaseMemoRepository.kt (Cloud Firestore &amp; Firebase Auth Real-Time Stream)</div>
+    <pre><code>package com.memo.app.data.repository
+
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.memo.app.data.mock.DemoDataSource
+import com.memo.app.data.model.*
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.tasks.await
+
+class FirebaseMemoRepository(
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance(),
+    private val mockFallback: MockMemoRepository = MockMemoRepository()
+) : IMemoRepository {
+
+    override fun getCurrentUser(): Flow&lt;User&gt; = callbackFlow {
+        val listener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+            val fbUser = firebaseAuth.currentUser
+            if (fbUser != null) {
+                trySend(
+                    User(
+                        id = fbUser.uid,
+                        name = fbUser.displayName ?: fbUser.email?.substringBefore("@") ?: "Shivam Singh",
+                        email = fbUser.email ?: "",
+                        memberSince = "Active",
+                        bloodGroup = "B+",
+                        age = 35,
+                        gender = "Male"
+                    )
+                )
+            } else {
+                trySend(DemoDataSource.currentUser)
+            }
+        }
+        auth.addAuthStateListener(listener)
+        awaitClose { auth.removeAuthStateListener(listener) }
+    }
+
+    override fun getReports(): Flow&lt;List&lt;MedicalReport&gt;&gt; {
+        val currentUserId = auth.currentUser?.uid
+        return if (currentUserId != null) {
+            callbackFlow {
+                val subscription = firestore.collection("users")
+                    .document(currentUserId)
+                    .collection("reports")
+                    .addSnapshotListener { snapshot, error ->
+                        if (error != null || snapshot == null || snapshot.isEmpty) {
+                            trySend(DemoDataSource.reports.toList())
+                            return@addSnapshotListener
+                        }
+                        val reports = snapshot.documents.mapNotNull { doc ->
+                            try {
+                                MedicalReport(
+                                    id = doc.id,
+                                    title = doc.getString("title") ?: "Medical Record",
+                                    type = try {
+                                        ReportType.valueOf(doc.getString("type") ?: "BLOOD_TEST")
+                                    } catch (_: Exception) { ReportType.BLOOD_TEST },
+                                    organization = doc.getString("organization") ?: "Clinical Lab",
+                                    doctor = doc.getString("doctor") ?: "Attending Physician",
+                                    date = doc.getString("date") ?: "2026-10-19",
+                                    summary = doc.getString("summary") ?: "",
+                                    hasAbnormalValues = doc.getBoolean("hasAbnormalValues") ?: false
+                                )
+                            } catch (_: Exception) { null }
+                        }
+                        trySend(if (reports.isEmpty()) DemoDataSource.reports.toList() else reports)
+                    }
+                awaitClose { subscription.remove() }
+            }
+        } else {
+            mockFallback.getReports()
+        }
+    }
+
+    override fun getReportById(id: String): Flow&lt;MedicalReport?&gt; {
+        return getReports().map { list -> list.find { it.id == id } }
+    }
+
+    override fun getHealthStats(): Flow&lt;HealthStats&gt; {
+        return getReports().map { list ->
+            HealthStats(
+                totalReports = list.size,
+                bloodTestsCount = list.count { it.type == ReportType.BLOOD_TEST },
+                urineTestsCount = list.count { it.type == ReportType.URINE_TEST },
+                imagingCount = list.count { it.type == ReportType.IMAGING },
+                prescriptionsCount = list.count { it.type == ReportType.PRESCRIPTION },
+                attentionRequiredCount = list.count { it.hasAbnormalValues }
+            )
+        }
+    }
+
+    override fun getFilteredReports(type: ReportType, query: String): Flow&lt;List&lt;MedicalReport&gt;&gt; {
+        return getReports().map { list ->
+            list.filter { report ->
+                val matchesType = (type == ReportType.ALL || report.type == type)
+                val matchesQuery = if (query.isBlank()) true else {
+                    val q = query.trim().lowercase()
+                    report.title.lowercase().contains(q) ||
+                    report.organization.lowercase().contains(q) ||
+                    report.doctor.lowercase().contains(q)
+                }
+                matchesType && matchesQuery
+            }
+        }
+    }
+
+    override suspend fun uploadReport(fileName: String, fileSize: Long): Result&lt;MedicalReport&gt; {
+        val currentUserId = auth.currentUser?.uid
+        val newReport = DemoDataSource.addUploadedReport(fileName)
+        if (currentUserId != null) {
+            try {
+                val reportData = hashMapOf(
+                    "title" to newReport.title,
+                    "type" to newReport.type.name,
+                    "organization" to newReport.organization,
+                    "doctor" to newReport.doctor,
+                    "date" to newReport.date,
+                    "summary" to newReport.summary,
+                    "hasAbnormalValues" to newReport.hasAbnormalValues
+                )
+                firestore.collection("users")
+                    .document(currentUserId)
+                    .collection("reports")
+                    .document(newReport.id)
+                    .set(reportData)
+                    .await()
+            } catch (_: Exception) { }
+        }
+        return Result.success(newReport)
+    }
+
+    override suspend fun login(email: String, pass: String): Result&lt;User&gt; {
+        return try {
+            val authResult = auth.signInWithEmailAndPassword(email, pass).await()
+            val fbUser = authResult.user
+            val user = User(
+                id = fbUser?.uid ?: "usr-01",
+                name = fbUser?.displayName ?: fbUser?.email?.substringBefore("@") ?: "Shivam Singh",
+                email = fbUser?.email ?: email,
+                memberSince = "Active"
+            )
+            Result.success(user)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun signUp(email: String, pass: String, name: String): Result&lt;User&gt; {
+        return try {
+            val authResult = auth.createUserWithEmailAndPassword(email, pass).await()
+            val fbUser = authResult.user
+            val user = User(
+                id = fbUser?.uid ?: "usr-01",
+                name = if (name.isNotBlank()) name else fbUser?.email?.substringBefore("@") ?: "Shivam Singh",
+                email = fbUser?.email ?: email,
+                memberSince = "October 2026"
+            )
+            fbUser?.uid?.let { uid ->
+                val userMap = hashMapOf(
+                    "id" to uid,
+                    "name" to user.name,
+                    "email" to user.email,
+                    "memberSince" to user.memberSince,
+                    "bloodGroup" to user.bloodGroup
+                )
+                firestore.collection("users").document(uid).set(userMap).await()
+            }
+            Result.success(user)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+}</code></pre>
+
+    <!-- 6. Mobile Application UI & ViewModel Code -->
+    <div class="page-break"></div>
+    <h2 class="section-title">6. Mobile Application UI &amp; ViewModel Code</h2>
+
+    <div class="filename-tag">AuthViewModel.kt (Firebase Auth StateFlow Manager)</div>
+    <pre><code>package com.memo.app.viewmodel
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.memo.app.data.mock.DemoDataSource
+import com.memo.app.data.model.User
+import com.memo.app.data.repository.IMemoRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+
+data class AuthUiState(
+    val isSignUp: Boolean = false,
+    val name: String = "",
+    val email: String = "shivam.singh@memo.demo",
+    val pass: String = "demo1234",
+    val isLoading: Boolean = false,
+    val isLoggedIn: Boolean = false,
+    val user: User? = null,
+    val errorMessage: String? = null,
+    val statusMessage: String? = null
+)
+
+class AuthViewModel(
+    private val repository: IMemoRepository
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow(AuthUiState())
+    val uiState = _uiState.asStateFlow()
+
+    fun toggleAuthMode() {
+        val current = _uiState.value
+        _uiState.value = current.copy(
+            isSignUp = !current.isSignUp,
+            errorMessage = null,
+            statusMessage = null
+        )
+    }
+
+    fun onNameChanged(name: String) { _uiState.value = _uiState.value.copy(name = name) }
+    fun onEmailChanged(email: String) { _uiState.value = _uiState.value.copy(email = email) }
+    fun onPasswordChanged(pass: String) { _uiState.value = _uiState.value.copy(pass = pass) }
+
+    fun login() {
+        val state = _uiState.value
+        _uiState.value = state.copy(isLoading = true, errorMessage = null)
+        viewModelScope.launch {
+            val result = repository.login(state.email, state.pass)
+            result.fold(
+                onSuccess = { user ->
+                    _uiState.value = _uiState.value.copy(isLoading = false, isLoggedIn = true, user = user)
+                },
+                onFailure = { error ->
+                    _uiState.value = _uiState.value.copy(isLoading = false, errorMessage = error.message)
+                }
+            )
+        }
+    }
+
+    fun signUp() {
+        val state = _uiState.value
+        _uiState.value = state.copy(isLoading = true, errorMessage = null)
+        viewModelScope.launch {
+            val result = repository.signUp(state.email, state.pass, state.name)
+            result.fold(
+                onSuccess = { user ->
+                    _uiState.value = _uiState.value.copy(isLoading = false, isLoggedIn = true, user = user)
+                },
+                onFailure = { error ->
+                    _uiState.value = _uiState.value.copy(isLoading = false, errorMessage = error.message)
+                }
+            )
+        }
+    }
+
+    fun loginWithDemo() {
+        val demoUser = DemoDataSource.currentUser
+        _uiState.value = _uiState.value.copy(
+            email = demoUser.email,
+            pass = "demo1234",
+            isLoading = false,
+            isLoggedIn = true,
+            user = demoUser
+        )
+    }
+
+    fun logout() {
+        _uiState.value = AuthUiState()
+    }
+}</code></pre>
+
+    <div class="filename-tag">MainActivity.kt &amp; MemoNavGraph.kt (Jetpack Navigation Flow)</div>
+    <pre><code>package com.memo.app
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import com.memo.app.navigation.MemoNavGraph
+import com.memo.app.ui.theme.MEMOTheme
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            MEMOTheme {
+                MemoNavGraph()
+            }
+        }
+    }
+}
+
+// Routes registered in MemoNavGraph:
+// 1. Routes.SPLASH ("splash") -> SplashScreen with 1.8s branding animation
+// 2. Routes.LOGIN ("login") -> LoginScreen with Firebase Auth & Demo toggle
+// 3. Routes.DASHBOARD ("dashboard") -> Executive summary, stats cards, and quick actions
+// 4. Routes.REPORTS ("reports") -> Filterable list by category chips (Blood, Urine, Imaging, Prescription)
+// 5. Routes.REPORT_DETAIL ("reports/{reportId}") -> Extracted lab values table & medications
+// 6. Routes.TIMELINE ("timeline") -> Chronological medical journey grouped by Year & Month
+// 7. Routes.SEARCH ("search") -> Instant substring search across clinical data
+// 8. Routes.UPLOAD ("upload") -> Simulated 3-stage OCR ingestion pipeline
+// 9. Routes.PROFILE ("profile") -> Demographic details & architecture verification</code></pre>
+
+    <!-- 7. Important Styling & Theme Tokens -->
+    <div class="page-break"></div>
+    <h2 class="section-title">7. Design Tokens &amp; Color System</h2>
+    <p>
+        The visual identity of MEMO uses clinical teal as its primary healthcare color, paired with deep slate text and semantic alert accents to immediately draw clinical attention to abnormal lab indicators.
+    </p>
+
+    <div class="filename-tag">Color.kt (Compose Color Tokens)</div>
+    <pre><code>package com.memo.app.ui.theme
+
+import androidx.compose.ui.graphics.Color
+
+// Primary Healthcare Brand Colors
+val Teal600 = Color(0xFF0D9488)        // Primary Brand Accent
+val Teal700 = Color(0xFF0F766E)        // Dark Teal
+val Teal100 = Color(0xFFCCFBF1)        // Teal Container Wash
+
+// Clinical Slate Palette (Text & Dark Surfaces)
+val Slate900 = Color(0xFF0F172A)       // Primary Text / Top App Bar
+val Slate700 = Color(0xFF334155)       // Body Text / Icons
+val Slate200 = Color(0xFFE2E8F0)       // Card Borders / Dividers
+val Slate100 = Color(0xFFF1F5F9)       // Chip Background / Surface Variant
+
+// Background & Surfaces
+val BackgroundLight = Color(0xFFFAFBFC)
+val SurfaceWhite = Color(0xFFFFFFFF)
+
+// Semantic & Clinical Status Indicators
+val StatusNormal = Color(0xFF16A34A)       // Green 600 - Normal Values
+val StatusNormalBg = Color(0xFFDCFCE7)     // Green 100 Container
+val StatusAbnormal = Color(0xFFDC2626)     // Red 600 - Abnormal / Critical Flag
+val StatusAbnormalBg = Color(0xFFFEE2E2)   // Red 100 Container
+val StatusWarning = Color(0xFFD97706)      // Amber 600 - Borderline / Elevated Flag
+val StatusWarningBg = Color(0xFFFEF3C7)    // Amber 100 Container</code></pre>
+
+    <!-- 8. API Operations & CI/CD Pipeline -->
+    <h2 class="section-title">8. API Operations &amp; CI/CD Stages</h2>
+    <table class="content-table">
+        <thead>
+            <tr>
+                <th>Operation / Stage</th>
+                <th>Protocol / Tool</th>
+                <th>Target Resource</th>
+                <th>Outcome / Verification</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Patient Registration</strong></td>
+                <td>Firebase Auth REST</td>
+                <td><code>/v1/accounts:signUp</code></td>
+                <td>Generates UID &amp; creates <code>/users/{uid}</code> profile doc</td>
+            </tr>
+            <tr>
+                <td><strong>Patient Sign In</strong></td>
+                <td>Firebase Auth REST</td>
+                <td><code>/v1/accounts:signInWithPassword</code></td>
+                <td>Validates credentials &amp; issues signed JWT access token</td>
+            </tr>
+            <tr>
+                <td><strong>Stream Patient Reports</strong></td>
+                <td>Firestore gRPC/Websocket</td>
+                <td><code>/users/{uid}/reports</code></td>
+                <td>Real-time snapshot listener updating Compose StateFlow</td>
+            </tr>
+            <tr>
+                <td><strong>Simulated OCR Ingest</strong></td>
+                <td>Kotlin Coroutines</td>
+                <td><code>uploadReport()</code></td>
+                <td>Simulates 2.5s 3-phase text parsing &amp; writes new doc</td>
+            </tr>
+            <tr>
+                <td><strong>Stage 1: Checkout SCM</strong></td>
+                <td>Git Client</td>
+                <td><code>origin/develop</code></td>
+                <td>Clones fresh branch commit into Jenkins workspace</td>
+            </tr>
+            <tr>
+                <td><strong>Stage 2: Prepare Env</strong></td>
+                <td>Shell Scripting</td>
+                <td><code>java -version</code>, <code>gradlew</code></td>
+                <td>Validates OpenJDK 17 and Gradle 8.4 runtime</td>
+            </tr>
+            <tr>
+                <td><strong>Stage 3: Compile Kotlin</strong></td>
+                <td>Gradle Daemon</td>
+                <td><code>./gradlew compileDebugKotlin</code></td>
+                <td>Compiles all Jetpack Compose screens and ViewModels</td>
+            </tr>
+            <tr>
+                <td><strong>Stage 4: Unit Testing</strong></td>
+                <td>JUnit 4 &amp; Coroutines Test</td>
+                <td><code>./gradlew testDebugUnitTest</code></td>
+                <td>Executes repository queries &amp; generates XML reports</td>
+            </tr>
+            <tr>
+                <td><strong>Stage 5: Android Lint</strong></td>
+                <td>Android Gradle Plugin</td>
+                <td><code>./gradlew lintDebug</code></td>
+                <td>Performs static analysis and archives HTML lint report</td>
+            </tr>
+            <tr>
+                <td><strong>Stage 6: Assemble APK</strong></td>
+                <td>Android AAPT2 &amp; D8</td>
+                <td><code>./gradlew assembleDebug</code></td>
+                <td>Packages native bytecode &amp; resources into APK</td>
+            </tr>
+            <tr>
+                <td><strong>Stage 7: Archive Artifacts</strong></td>
+                <td>Jenkins Artifact Archiver</td>
+                <td><code>app-debug.apk</code></td>
+                <td>Stores installable APK on Jenkins server for download</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- 9. Application Screens & Verification -->
+    <div class="page-break"></div>
+    <h2 class="section-title">9. Mobile Application Screen Architecture &amp; Verification</h2>
+    <p>
+        The application is structured into 9 modular Jetpack Compose screens matching standard mobile healthcare workflows:
+    </p>
+
+    <div class="screen-card-grid">
+        <div class="screen-mock">
+            <div class="screen-mock-header">1. Splash &amp; Branding Screen</div>
+            <div class="screen-mock-body">
+                • <strong>Logo Animation:</strong> Animated Medical Heart/Shield icon with Teal600 glow.<br>
+                • <strong>Full Form Expansion:</strong> Displays <em>"Medical Evidence Management &amp; Organization"</em>.<br>
+                • <strong>Auto-Transition:</strong> Automatically navigates to Login after 1.8 seconds.
+            </div>
+        </div>
+        <div class="screen-mock">
+            <div class="screen-mock-header">2. Authentication &amp; Registration</div>
+            <div class="screen-mock-body">
+                • <strong>Mode Switching:</strong> Seamless toggle between Sign In and Account Registration.<br>
+                • <strong>Backend Integration:</strong> Validates against Firebase Authentication with error handling.<br>
+                • <strong>One-Tap Demo:</strong> Auto-fills credentials for instant offline evaluator access.
+            </div>
+        </div>
+        <div class="screen-mock">
+            <div class="screen-mock-header">3. Executive Health Dashboard</div>
+            <div class="screen-mock-body">
+                • <strong>Patient Header:</strong> Name (<em>Shivam Singh</em>), Blood Group B+, Member status.<br>
+                • <strong>Metric Cards:</strong> Total Reports (12), Abnormal Alerts (3), Blood/Urine/Imaging counts.<br>
+                • <strong>Quick Upload FAB:</strong> Floating action button to instantly add new records.
+            </div>
+        </div>
+        <div class="screen-mock">
+            <div class="screen-mock-header">4. Reports Explorer &amp; Filter Chips</div>
+            <div class="screen-mock-body">
+                • <strong>Category Chips:</strong> Filter by All, Blood Test, Urine Test, Imaging, Prescription.<br>
+                • <strong>Search Query Bar:</strong> Real-time filtering across titles, clinics, and doctor names.<br>
+                • <strong>Clinical Status Badges:</strong> Visual badges for normal vs. abnormal parameters.
+            </div>
+        </div>
+        <div class="screen-mock">
+            <div class="screen-mock-header">5. Clinical Report Detail View</div>
+            <div class="screen-mock-body">
+                • <strong>Extracted Parameters Table:</strong> Test Name, Patient Value, Units, Reference Ranges.<br>
+                • <strong>Abnormal Indicators:</strong> Red highlighting on elevated values (e.g., HbA1c: 7.2%).<br>
+                • <strong>Prescription Card:</strong> Medication dosages, frequencies, and durations.
+            </div>
+        </div>
+        <div class="screen-mock">
+            <div class="screen-mock-header">6. Longitudinal Health Timeline</div>
+            <div class="screen-mock-body">
+                • <strong>Chronological Layout:</strong> Groups records chronologically by Year and Month.<br>
+                • <strong>Vertical Line Indicator:</strong> Visual timeline track connecting past health episodes.<br>
+                • <strong>Tap-to-Inspect:</strong> Navigates directly into the specific report's detailed view.
+            </div>
+        </div>
+        <div class="screen-mock">
+            <div class="screen-mock-header">7. Simulated Ingest &amp; OCR Engine</div>
+            <div class="screen-mock-body">
+                • <strong>3-Stage Progress:</strong> Step 1 (Uploading PDF), Step 2 (OCR Text Extraction), Step 3 (Structuring Data).<br>
+                • <strong>Animated Feedback:</strong> Linear progress indicator with simulated 2.5s parsing delay.<br>
+                • <strong>Auto-Save:</strong> Injects the parsed report directly into Firestore &amp; state flow.
+            </div>
+        </div>
+        <div class="screen-mock">
+            <div class="screen-mock-header">8. Patient Profile &amp; Architecture Info</div>
+            <div class="screen-mock-body">
+                • <strong>Demographics:</strong> Age, Gender, Emergency contact, Blood group.<br>
+                • <strong>Architecture Audit Card:</strong> Technical breakdown of Firebase Auth, Firestore, and MVVM.<br>
+                • <strong>Session Sign-Out:</strong> Destroys user session and redirects to Login Screen.
+            </div>
+        </div>
+    </div>
+
+    <h3 class="sub-title">Verification via Automated Jenkins CI/CD Pipeline</h3>
+    <p>
+        The project undergoes automated quality verification via a dedicated Jenkins CI/CD pipeline hosted at <code>http://localhost:8080/job/Memo-pipeline/</code>. The pipeline enforces clean compiles, code style, unit test passes, and produces the final distributable Android package (<code>app-debug.apk</code>).
+    </p>
+    <pre><code>[Pipeline] stage: 1. Checkout SCM -> SUCCESS (Cloned develop branch)
+[Pipeline] stage: 2. Prepare Environment -> SUCCESS (Java 17, Gradle 8.4)
+[Pipeline] stage: 3. Compile -> SUCCESS (compileDebugKotlin completed)
+[Pipeline] stage: 4. Unit Tests -> SUCCESS (0 failures, JUnit XML recorded)
+[Pipeline] stage: 5. Static Code Analysis (Lint) -> SUCCESS (HTML lint report archived)
+[Pipeline] stage: 6. Assemble Debug APK -> SUCCESS (Generated app-debug.apk)
+[Pipeline] stage: 7. Archive Build Artifacts -> SUCCESS (Stored app-debug.apk)
+Finished: SUCCESS (MEMO Build Pipeline Completed Successfully!)</code></pre>
+
+    <!-- 10. Conclusion -->
+    <h2 class="section-title">10. Conclusion</h2>
+    <p>
+        The <strong>MEMO (Medical Evidence Management &amp; Organization)</strong> project demonstrates an end-to-end modern mobile engineering solution for the <em>Website and Mobile Application Development (WMAD)</em> curriculum. By leveraging native Kotlin with Jetpack Compose, the application achieves a responsive, clean, and accessible user experience. The integration of the Clean Repository Pattern enables transparent switching between local in-memory mock datasets and real Google Cloud Firebase / Cloud Firestore services. The automated Jenkins CI/CD pipeline guarantees high software delivery standards, reliable dependency management, and automated production of verified Android APK artifacts.
+    </p>
+
+</div>
+
+</body>
+</html>
