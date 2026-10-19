@@ -1,18 +1,21 @@
 package com.memo.app.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MedicalServices
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -35,14 +38,14 @@ fun LoginScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(BackgroundLight)
-            .padding(24.dp),
+            .padding(20.dp),
         contentAlignment = Alignment.Center
     ) {
         Card(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(20.dp),
             colors = CardDefaults.cardColors(containerColor = SurfaceWhite),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -54,14 +57,14 @@ fun LoginScreen(
                     imageVector = Icons.Default.MedicalServices,
                     contentDescription = null,
                     tint = Teal600,
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier.size(44.dp)
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Welcome to MEMO",
-                    style = MaterialTheme.typography.headlineMedium,
+                    text = "MEMO Medical Archive",
+                    style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = Slate900
                 )
@@ -73,20 +76,74 @@ fun LoginScreen(
                     color = Teal600
                 )
 
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-                Text(
-                    text = "Sign in to access your personal medical archive",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Slate500
-                )
+                // Auth Mode Switcher (Sign In vs Create Account)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Slate100)
+                        .padding(4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(if (!state.isSignUp) SurfaceWhite else Slate100)
+                            .clickable { if (state.isSignUp) viewModel.toggleAuthMode() }
+                            .padding(vertical = 10.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Sign In",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = if (!state.isSignUp) FontWeight.Bold else FontWeight.Medium,
+                            color = if (!state.isSignUp) Slate900 else Slate500
+                        )
+                    }
 
-                Spacer(modifier = Modifier.height(24.dp))
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(if (state.isSignUp) SurfaceWhite else Slate100)
+                            .clickable { if (!state.isSignUp) viewModel.toggleAuthMode() }
+                            .padding(vertical = 10.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Create Account",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = if (state.isSignUp) FontWeight.Bold else FontWeight.Medium,
+                            color = if (state.isSignUp) Slate900 else Slate500
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Name field only during registration
+                if (state.isSignUp) {
+                    OutlinedTextField(
+                        value = state.name,
+                        onValueChange = { viewModel.onNameChanged(it) },
+                        label = { Text("Full Name") },
+                        leadingIcon = {
+                            Icon(imageVector = Icons.Default.Person, contentDescription = null, tint = Slate400)
+                        },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(10.dp)
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
 
                 OutlinedTextField(
                     value = state.email,
                     onValueChange = { viewModel.onEmailChanged(it) },
-                    label = { Text("Email Address") },
+                    label = { Text("Firebase Email") },
                     leadingIcon = {
                         Icon(imageVector = Icons.Default.Email, contentDescription = null, tint = Slate400)
                     },
@@ -95,12 +152,12 @@ fun LoginScreen(
                     shape = RoundedCornerShape(10.dp)
                 )
 
-                Spacer(modifier = Modifier.height(14.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
                 OutlinedTextField(
                     value = state.pass,
                     onValueChange = { viewModel.onPasswordChanged(it) },
-                    label = { Text("Password") },
+                    label = { Text("Password (min 6 characters)") },
                     leadingIcon = {
                         Icon(imageVector = Icons.Default.Lock, contentDescription = null, tint = Slate400)
                     },
@@ -119,10 +176,26 @@ fun LoginScreen(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                if (state.statusMessage != null) {
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        text = state.statusMessage ?: "",
+                        color = Teal700,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
 
+                Spacer(modifier = Modifier.height(18.dp))
+
+                // Primary Action Button (Sign In or Sign Up)
                 Button(
-                    onClick = { viewModel.login() },
+                    onClick = {
+                        if (state.isSignUp) {
+                            viewModel.signUp()
+                        } else {
+                            viewModel.login()
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp),
@@ -138,7 +211,7 @@ fun LoginScreen(
                         )
                     } else {
                         Text(
-                            text = "Sign In",
+                            text = if (state.isSignUp) "Create Firebase Account" else "Sign In with Firebase",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = SurfaceWhite
@@ -148,28 +221,28 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // One-tap demo button for rapid academic demonstration
+                // One-tap demo button for rapid offline demonstration
                 OutlinedButton(
                     onClick = { viewModel.loginWithDemo() },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(48.dp),
+                        .height(46.dp),
                     shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = Teal700),
                     border = ButtonDefaults.outlinedButtonBorder.copy(brush = androidx.compose.ui.graphics.SolidColor(Teal600))
                 ) {
                     Text(
-                        text = "Continue with Demo (Shivam Singh)",
-                        style = MaterialTheme.typography.titleMedium,
+                        text = "Demo Mode (Offline Clinical Records)",
+                        style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.SemiBold,
                         color = Teal700
                     )
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(14.dp))
 
                 Text(
-                    text = "Demo Mode: Evaluates UI and Repository abstraction with local records.",
+                    text = "🔒 Backed by Firebase Authentication & Cloud Firestore",
                     style = MaterialTheme.typography.bodySmall,
                     color = Slate400,
                     fontSize = 11.sp

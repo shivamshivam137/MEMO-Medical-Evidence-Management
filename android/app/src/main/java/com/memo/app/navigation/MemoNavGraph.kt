@@ -12,6 +12,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.memo.app.data.repository.FirebaseMemoRepository
+import com.memo.app.data.repository.IMemoRepository
 import com.memo.app.data.repository.MockMemoRepository
 import com.memo.app.ui.screens.*
 import com.memo.app.viewmodel.*
@@ -19,7 +21,11 @@ import com.memo.app.viewmodel.*
 @Composable
 fun MemoNavGraph(
     navController: NavHostController = rememberNavController(),
-    repository: MockMemoRepository = MockMemoRepository()
+    repository: IMemoRepository = try {
+        FirebaseMemoRepository()
+    } catch (_: Throwable) {
+        MockMemoRepository()
+    }
 ) {
     // Shared ViewModels backed by repository interface
     val authViewModel = AuthViewModel(repository)

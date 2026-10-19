@@ -39,8 +39,8 @@ local.properties
 *.jks
 *.keystore
 
-# Google Services (future Supabase / Firebase)
-google-services.json
+# Google Services (Firebase configuration for CI/CD builds)
+# google-services.json
 
 # OS-specific
 .DS_Store

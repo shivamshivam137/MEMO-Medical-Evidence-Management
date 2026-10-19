@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.*
@@ -28,14 +29,15 @@ fun ProfileScreen(
     authViewModel: AuthViewModel,
     onLogout: () -> Unit
 ) {
-    val user = DemoDataSource.currentUser
+    val authState by authViewModel.uiState.collectAsState()
+    val user = authState.user ?: DemoDataSource.currentUser
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(BackgroundLight)
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         Text(
             text = "Patient Profile",
@@ -111,7 +113,7 @@ fun ProfileScreen(
             }
         }
 
-        // Architecture Information Card
+        // Firebase Sync & Seed Card
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(14.dp),
@@ -120,23 +122,74 @@ fun ProfileScreen(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "System Architecture Status",
+                    text = "Firebase Cloud Database Sync",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = Slate900
                 )
 
                 Text(
-                    text = "MEMO — Medical Evidence Management & Organization",
-                    style = MaterialTheme.typography.labelSmall,
-                    fontWeight = FontWeight.Medium,
-                    color = Teal700
+                    text = "Sync and populate sample longitudinal reports to your Firebase Firestore database.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Slate600
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                if (authState.statusMessage != null) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = authState.statusMessage ?: "",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Teal700,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+
+                if (authState.errorMessage != null) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = authState.errorMessage ?: "",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = StatusAbnormal,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                OutlinedButton(
+                    onClick = { authViewModel.seedSampleData() },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Teal700),
+                    border = BorderStroke(1.dp, Teal600),
+                    enabled = !authState.isLoading
+                ) {
+                    Icon(imageVector = Icons.Default.CloudUpload, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = "Seed 12 Sample Reports to Firestore")
+                }
+            }
+        }
+
+        // System Architecture Card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(14.dp),
+            colors = CardDefaults.cardColors(containerColor = SurfaceWhite),
+            border = BorderStroke(1.dp, Slate200)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = "Backend & Security Architecture",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Slate900
+                )
+
+                Spacer(modifier = Modifier.height(6.dp))
 
                 Text(
-                    text = "• Client: Jetpack Compose + MVVM\n• Data Layer: IMemoRepository (MockMemoRepository)\n• Target Backend: FastAPI + Supabase PostgreSQL (Phase 1)\n• Target OCR: PaddleOCR Pipeline (Phase 1)\n• DevOps: Git, Jira, Docker, Jenkins CI/CD",
+                    text = "• Authentication: Firebase Auth (Email & Password)\n• Data Storage: Google Cloud Firestore (Real-Time Streams)\n• Document Storage: Firebase Cloud Storage\n• Client Layer: MVVM + Jetpack Compose + Kotlin Coroutines Flow\n• Offline Cache: Firestore Local Persistence Enabled",
                     style = MaterialTheme.typography.bodySmall,
                     color = Slate700,
                     lineHeight = 20.sp
@@ -161,7 +214,7 @@ fun ProfileScreen(
             Icon(imageVector = Icons.Default.ExitToApp, contentDescription = null, tint = StatusAbnormal)
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Sign Out Demo Session",
+                text = "Sign Out Session",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
                 color = StatusAbnormal

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "741473011632",
+    "project_id": "nagrikneeti-cfd36",
+    "storage_bucket": "nagrikneeti-cfd36.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:741473011632:android:09a354e261c3256902b875",
+        "android_client_info": {
+          "package_name": "com.memo.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXjICDHmL7NmGtLCnxWOAuloutu8Xh0dc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
