@@ -26,12 +26,14 @@ import com.memo.app.viewmodel.AuthViewModel
 @Composable
 fun LoginScreen(
     viewModel: AuthViewModel,
-    onLoginSuccess: () -> Unit
+    onLoginSuccess: (isFirstTime: Boolean) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
-    if (state.isLoggedIn) {
-        onLoginSuccess()
+    androidx.compose.runtime.LaunchedEffect(state.isLoggedIn, state.isFirstTimeUser) {
+        if (state.isLoggedIn) {
+            onLoginSuccess(state.isFirstTimeUser)
+        }
     }
 
     Box(

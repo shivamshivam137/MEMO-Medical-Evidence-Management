@@ -5,6 +5,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -12,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.memo.app.data.local.UserProfilePreferences
 import com.memo.app.data.repository.FirebaseMemoRepository
 import com.memo.app.data.repository.IMemoRepository
 import com.memo.app.data.repository.MockMemoRepository
@@ -27,6 +29,9 @@ fun MemoNavGraph(
         MockMemoRepository()
     }
 ) {
+    val context = LocalContext.current
+    UserProfilePreferences.init(context)
+
     // Shared ViewModels backed by repository interface
     val authViewModel = AuthViewModel(repository)
     val dashboardViewModel = DashboardViewModel(repository)
@@ -70,7 +75,12 @@ fun MemoNavGraph(
             composable(Routes.SPLASH) {
                 SplashScreen(
                     onTimeout = {
-                        navController.navigate(Routes.LOGIN) {
+                        val destination = if (authViewModel.uiState.value.isLoggedIn) {
+                            if (!authViewModel.isProfileCompleted()) Routes.ONBOARDING_PROFILE else Routes.DASHBOARD
+                        } else {
+                            Routes.LOGIN
+                        }
+                        navController.navigate(destination) {
                             popUpTo(Routes.SPLASH) { inclusive = true }
                         }
                     }
@@ -80,9 +90,21 @@ fun MemoNavGraph(
             composable(Routes.LOGIN) {
                 LoginScreen(
                     viewModel = authViewModel,
-                    onLoginSuccess = {
-                        navController.navigate(Routes.DASHBOARD) {
+                    onLoginSuccess = { isFirstTime ->
+                        val targetRoute = if (isFirstTime) Routes.ONBOARDING_PROFILE else Routes.DASHBOARD
+                        navController.navigate(targetRoute) {
                             popUpTo(Routes.LOGIN) { inclusive = true }
+                        }
+                    }
+                )
+            }
+
+            composable(Routes.ONBOARDING_PROFILE) {
+                OnboardingProfileScreen(
+                    authViewModel = authViewModel,
+                    onProfileCompleted = {
+                        navController.navigate(Routes.DASHBOARD) {
+                            popUpTo(Routes.ONBOARDING_PROFILE) { inclusive = true }
                         }
                     }
                 )

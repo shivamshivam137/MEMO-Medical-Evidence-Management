@@ -7,6 +7,7 @@ import com.memo.app.data.model.User
 import com.memo.app.data.repository.IMemoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 data class AuthUiState(
@@ -16,6 +17,7 @@ data class AuthUiState(
     val pass: String = "demo1234",
     val isLoading: Boolean = false,
     val isLoggedIn: Boolean = false,
+    val isFirstTimeUser: Boolean = false,
     val user: User? = null,
     val errorMessage: String? = null,
     val statusMessage: String? = null
@@ -27,6 +29,18 @@ class AuthViewModel(
 
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState = _uiState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            repository.getCurrentUser().collect { user ->
+                _uiState.value = _uiState.value.copy(user = user)
+            }
+        }
+    }
+
+    fun isProfileCompleted(): Boolean {
+        return repository.isProfileCompleted() || (_uiState.value.user?.isProfileCompleted == true)
+    }
 
     fun toggleAuthMode() {
         val current = _uiState.value
@@ -56,9 +70,11 @@ class AuthViewModel(
             val result = repository.login(state.email, state.pass)
             result.fold(
                 onSuccess = { user ->
+                    val isFirstTime = !repository.isProfileCompleted() && !user.isProfileCompleted
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
                         isLoggedIn = true,
+                        isFirstTimeUser = isFirstTime,
                         user = user,
                         statusMessage = "Authenticated successfully"
                     )
@@ -83,6 +99,7 @@ class AuthViewModel(
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
                         isLoggedIn = true,
+                        isFirstTimeUser = true,
                         user = user,
                         statusMessage = "Account registered successfully"
                     )
@@ -98,15 +115,63 @@ class AuthViewModel(
     }
 
     fun loginWithDemo() {
-        val demoUser = DemoDataSource.currentUser
-        _uiState.value = _uiState.value.copy(
-            email = demoUser.email,
-            pass = "demo1234",
-            isLoading = false,
-            isLoggedIn = true,
-            user = demoUser,
-            statusMessage = "Signed in with Offline Demo profile"
+        viewModelScope.launch {
+            val demoUser = repository.getCurrentUser().firstOrNull() ?: DemoDataSource.currentUser
+            val isFirstTime = !repository.isProfileCompleted() && !demoUser.isProfileCompleted
+            _uiState.value = _uiState.value.copy(
+                email = demoUser.email,
+                pass = "demo1234",
+                isLoading = false,
+                isLoggedIn = true,
+                isFirstTimeUser = isFirstTime,
+                user = demoUser,
+                statusMessage = "Signed in with Offline Demo profile"
+            )
+        }
+    }
+
+    fun updateProfile(
+        name: String,
+        nickname: String,
+        bloodGroup: String,
+        age: Int,
+        gender: String,
+        emergencyContact: String = "",
+        allergies: String = "",
+        onComplete: (() -> Unit)? = null
+    ) {
+        val currentUser = _uiState.value.user ?: DemoDataSource.currentUser
+        val newUser = currentUser.copy(
+            name = name.trim().ifBlank { currentUser.name },
+            nickname = nickname.trim(),
+            bloodGroup = bloodGroup.trim().ifBlank { currentUser.bloodGroup },
+            age = if (age > 0) age else currentUser.age,
+            gender = gender.trim().ifBlank { currentUser.gender },
+            emergencyContact = emergencyContact.trim(),
+            allergies = allergies.trim(),
+            isProfileCompleted = true
         )
+        _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null, statusMessage = null)
+        viewModelScope.launch {
+            val result = repository.updateUserProfile(newUser)
+            result.fold(
+                onSuccess = { savedUser ->
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        isFirstTimeUser = false,
+                        user = savedUser,
+                        statusMessage = "Profile updated successfully!"
+                    )
+                    onComplete?.invoke()
+                },
+                onFailure = { error ->
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = error.message ?: "Failed to update profile"
+                    )
+                }
+            )
+        }
     }
 
     fun seedSampleData() {

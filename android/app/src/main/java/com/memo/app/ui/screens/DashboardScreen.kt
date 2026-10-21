@@ -79,8 +79,9 @@ fun DashboardScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column {
+                            val displayName = state.user?.nickname?.takeIf { it.isNotBlank() } ?: state.user?.name ?: "Patient"
                             Text(
-                                text = "Hello, ${state.user?.name ?: "Patient"} 👋",
+                                text = "Hello, $displayName 👋",
                                 style = MaterialTheme.typography.headlineMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = Slate900

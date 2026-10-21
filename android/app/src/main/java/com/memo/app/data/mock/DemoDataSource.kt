@@ -9,14 +9,18 @@ import com.memo.app.data.model.User
 
 object DemoDataSource {
 
-    val currentUser = User(
+    var currentUser = User(
         id = "usr-001",
         name = "Shivam Singh",
         email = "shivam.singh@memo.demo",
         memberSince = "June 2025",
         bloodGroup = "B+",
         age = 42,
-        gender = "Male"
+        gender = "Male",
+        nickname = "Shiv",
+        emergencyContact = "+91 98765 43210",
+        allergies = "None reported",
+        isProfileCompleted = false
     )
 
     private val initialReports = mutableListOf(

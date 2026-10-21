@@ -55,7 +55,11 @@ data class User(
     val memberSince: String,
     val bloodGroup: String = "B+",
     val age: Int = 42,
-    val gender: String = "Male"
+    val gender: String = "Male",
+    val nickname: String = "",
+    val emergencyContact: String = "",
+    val allergies: String = "",
+    val isProfileCompleted: Boolean = false
 )
 
 data class HealthStats(

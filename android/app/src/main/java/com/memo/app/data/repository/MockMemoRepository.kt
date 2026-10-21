@@ -1,5 +1,6 @@
 package com.memo.app.data.repository
 
+import com.memo.app.data.local.UserProfilePreferences
 import com.memo.app.data.mock.DemoDataSource
 import com.memo.app.data.model.HealthStats
 import com.memo.app.data.model.MedicalReport
@@ -18,7 +19,7 @@ class MockMemoRepository(
     private val _reportsFlow = MutableStateFlow<List<MedicalReport>>(dataSource.reports.toList())
     val reportsFlow = _reportsFlow.asStateFlow()
 
-    private val _userFlow = MutableStateFlow<User>(dataSource.currentUser)
+    private val _userFlow = MutableStateFlow<User>(UserProfilePreferences.loadUser(dataSource.currentUser))
 
     override fun getCurrentUser(): Flow<User> = _userFlow
 
@@ -69,7 +70,9 @@ class MockMemoRepository(
     override suspend fun login(email: String, pass: String): Result<User> {
         delay(600)
         return if (email.isNotBlank() && pass.isNotBlank()) {
-            Result.success(dataSource.currentUser)
+            val user = UserProfilePreferences.loadUser(dataSource.currentUser)
+            _userFlow.value = user
+            Result.success(user)
         } else {
             Result.failure(IllegalArgumentException("Please enter a valid email and password"))
         }
@@ -80,12 +83,29 @@ class MockMemoRepository(
         return if (email.isNotBlank() && pass.isNotBlank()) {
             val user = dataSource.currentUser.copy(
                 name = if (name.isNotBlank()) name else dataSource.currentUser.name,
-                email = email
+                email = email,
+                isProfileCompleted = false
             )
+            dataSource.currentUser = user
+            UserProfilePreferences.saveUser(user)
+            UserProfilePreferences.setProfileCompleted(false)
             _userFlow.value = user
             Result.success(user)
         } else {
             Result.failure(IllegalArgumentException("Please enter a valid email and password"))
         }
+    }
+
+    override suspend fun updateUserProfile(user: User): Result<User> {
+        val updatedUser = user.copy(isProfileCompleted = true)
+        dataSource.currentUser = updatedUser
+        UserProfilePreferences.saveUser(updatedUser)
+        UserProfilePreferences.setProfileCompleted(true)
+        _userFlow.value = updatedUser
+        return Result.success(updatedUser)
+    }
+
+    override fun isProfileCompleted(): Boolean {
+        return _userFlow.value.isProfileCompleted || UserProfilePreferences.isProfileCompleted()
     }
 }

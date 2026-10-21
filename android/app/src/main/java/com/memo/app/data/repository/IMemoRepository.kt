@@ -15,4 +15,6 @@ interface IMemoRepository {
     suspend fun uploadReport(fileName: String, fileSize: Long = 1024L): Result<MedicalReport>
     suspend fun login(email: String, pass: String): Result<User>
     suspend fun signUp(email: String, pass: String, name: String = ""): Result<User>
+    suspend fun updateUserProfile(user: User): Result<User>
+    fun isProfileCompleted(): Boolean
 }

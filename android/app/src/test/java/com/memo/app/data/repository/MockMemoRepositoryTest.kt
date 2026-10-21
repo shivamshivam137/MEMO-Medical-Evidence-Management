@@ -54,4 +54,22 @@ class MockMemoRepositoryTest {
         val updatedReports = repository.getReports().first()
         assertEquals("Reports size should increment by 1", initialCount + 1, updatedReports.size)
     }
+
+    @Test
+    fun testUpdateUserProfile_updatesBloodGroupAndAgeAndNickname() = runTest {
+        val initialUser = repository.getCurrentUser().first()
+        val modified = initialUser.copy(
+            bloodGroup = "O+",
+            age = 29,
+            nickname = "Shivvy"
+        )
+        val result = repository.updateUserProfile(modified)
+        assertTrue("Update profile should succeed", result.isSuccess)
+
+        val updatedUser = repository.getCurrentUser().first()
+        assertEquals("Blood group should be updated to O+", "O+", updatedUser.bloodGroup)
+        assertEquals("Age should be updated to 29", 29, updatedUser.age)
+        assertEquals("Nickname should be updated to Shivvy", "Shivvy", updatedUser.nickname)
+        assertTrue("Profile should now be marked as completed", repository.isProfileCompleted())
+    }
 }

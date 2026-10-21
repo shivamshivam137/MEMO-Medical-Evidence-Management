@@ -3,6 +3,7 @@ package com.memo.app.navigation
 object Routes {
     const val SPLASH = "splash"
     const val LOGIN = "login"
+    const val ONBOARDING_PROFILE = "onboarding_profile"
     const val DASHBOARD = "dashboard"
     const val REPORTS = "reports"
     const val REPORT_DETAIL = "report_detail/{reportId}"

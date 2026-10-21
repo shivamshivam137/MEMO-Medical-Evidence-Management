@@ -2,6 +2,7 @@ package com.memo.app.data.repository
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.memo.app.data.local.UserProfilePreferences
 import com.memo.app.data.mock.DemoDataSource
 import com.memo.app.data.model.*
 import kotlinx.coroutines.channels.awaitClose
@@ -20,19 +21,42 @@ class FirebaseMemoRepository(
         val listener = FirebaseAuth.AuthStateListener { firebaseAuth ->
             val fbUser = firebaseAuth.currentUser
             if (fbUser != null) {
-                trySend(
-                    User(
-                        id = fbUser.uid,
-                        name = fbUser.displayName ?: fbUser.email?.substringBefore("@") ?: "MEMO Patient",
-                        email = fbUser.email ?: "",
-                        memberSince = "Active",
-                        bloodGroup = "B+",
-                        age = 35,
-                        gender = "Male"
-                    )
-                )
+                firestore.collection("users").document(fbUser.uid)
+                    .addSnapshotListener { snapshot, _ ->
+                        if (snapshot != null && snapshot.exists()) {
+                            val user = User(
+                                id = fbUser.uid,
+                                name = snapshot.getString("name") ?: fbUser.displayName ?: fbUser.email?.substringBefore("@") ?: "MEMO Patient",
+                                email = snapshot.getString("email") ?: fbUser.email ?: "",
+                                memberSince = snapshot.getString("memberSince") ?: "Active",
+                                bloodGroup = snapshot.getString("bloodGroup") ?: "B+",
+                                age = snapshot.getLong("age")?.toInt() ?: 35,
+                                gender = snapshot.getString("gender") ?: "Male",
+                                nickname = snapshot.getString("nickname") ?: "",
+                                emergencyContact = snapshot.getString("emergencyContact") ?: "",
+                                allergies = snapshot.getString("allergies") ?: "",
+                                isProfileCompleted = snapshot.getBoolean("isProfileCompleted") ?: UserProfilePreferences.isProfileCompleted()
+                            )
+                            UserProfilePreferences.saveUser(user)
+                            trySend(user)
+                        } else {
+                            val fallback = UserProfilePreferences.loadUser(
+                                User(
+                                    id = fbUser.uid,
+                                    name = fbUser.displayName ?: fbUser.email?.substringBefore("@") ?: "MEMO Patient",
+                                    email = fbUser.email ?: "",
+                                    memberSince = "Active",
+                                    bloodGroup = "B+",
+                                    age = 35,
+                                    gender = "Male",
+                                    isProfileCompleted = UserProfilePreferences.isProfileCompleted()
+                                )
+                            )
+                            trySend(fallback)
+                        }
+                    }
             } else {
-                trySend(DemoDataSource.currentUser)
+                trySend(UserProfilePreferences.loadUser(DemoDataSource.currentUser))
             }
         }
         auth.addAuthStateListener(listener)
@@ -145,15 +169,37 @@ class FirebaseMemoRepository(
         return try {
             val authResult = auth.signInWithEmailAndPassword(email, pass).await()
             val fbUser = authResult.user
-            val user = User(
-                id = fbUser?.uid ?: "usr-01",
-                name = fbUser?.displayName ?: fbUser?.email?.substringBefore("@") ?: "Shivam Singh",
-                email = fbUser?.email ?: email,
-                memberSince = "Active",
-                bloodGroup = "B+",
-                age = 35,
-                gender = "Male"
-            )
+            val uid = fbUser?.uid ?: "usr-01"
+            val doc = firestore.collection("users").document(uid).get().await()
+            val user = if (doc.exists()) {
+                User(
+                    id = uid,
+                    name = doc.getString("name") ?: fbUser?.displayName ?: fbUser?.email?.substringBefore("@") ?: "Shivam Singh",
+                    email = doc.getString("email") ?: fbUser?.email ?: email,
+                    memberSince = doc.getString("memberSince") ?: "Active",
+                    bloodGroup = doc.getString("bloodGroup") ?: "B+",
+                    age = doc.getLong("age")?.toInt() ?: 35,
+                    gender = doc.getString("gender") ?: "Male",
+                    nickname = doc.getString("nickname") ?: "",
+                    emergencyContact = doc.getString("emergencyContact") ?: "",
+                    allergies = doc.getString("allergies") ?: "",
+                    isProfileCompleted = doc.getBoolean("isProfileCompleted") ?: UserProfilePreferences.isProfileCompleted()
+                )
+            } else {
+                UserProfilePreferences.loadUser(
+                    User(
+                        id = uid,
+                        name = fbUser?.displayName ?: fbUser?.email?.substringBefore("@") ?: "Shivam Singh",
+                        email = fbUser?.email ?: email,
+                        memberSince = "Active",
+                        bloodGroup = "B+",
+                        age = 35,
+                        gender = "Male",
+                        isProfileCompleted = UserProfilePreferences.isProfileCompleted()
+                    )
+                )
+            }
+            UserProfilePreferences.saveUser(user)
             Result.success(user)
         } catch (e: Exception) {
             Result.failure(e)
@@ -171,23 +217,61 @@ class FirebaseMemoRepository(
                 memberSince = "October 2026",
                 bloodGroup = "B+",
                 age = 35,
-                gender = "Male"
+                gender = "Male",
+                isProfileCompleted = false
             )
             fbUser?.uid?.let { uid ->
                 val userMap = hashMapOf(
                     "id" to uid,
                     "name" to user.name,
+                    "nickname" to user.nickname,
                     "email" to user.email,
                     "memberSince" to user.memberSince,
                     "bloodGroup" to user.bloodGroup,
                     "age" to user.age,
-                    "gender" to user.gender
+                    "gender" to user.gender,
+                    "emergencyContact" to user.emergencyContact,
+                    "allergies" to user.allergies,
+                    "isProfileCompleted" to false
                 )
                 firestore.collection("users").document(uid).set(userMap).await()
             }
+            UserProfilePreferences.saveUser(user)
+            UserProfilePreferences.setProfileCompleted(false)
             Result.success(user)
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+    override suspend fun updateUserProfile(user: User): Result<User> {
+        val updated = user.copy(isProfileCompleted = true)
+        UserProfilePreferences.saveUser(updated)
+        UserProfilePreferences.setProfileCompleted(true)
+        val currentUserId = auth.currentUser?.uid ?: user.id
+        return try {
+            val userMap = hashMapOf(
+                "id" to currentUserId,
+                "name" to updated.name,
+                "nickname" to updated.nickname,
+                "email" to updated.email,
+                "memberSince" to updated.memberSince,
+                "bloodGroup" to updated.bloodGroup,
+                "age" to updated.age,
+                "gender" to updated.gender,
+                "emergencyContact" to updated.emergencyContact,
+                "allergies" to updated.allergies,
+                "isProfileCompleted" to true
+            )
+            firestore.collection("users").document(currentUserId).set(userMap).await()
+            Result.success(updated)
+        } catch (_: Exception) {
+            // Succeeded locally even if firestore write failed
+            Result.success(updated)
+        }
+    }
+
+    override fun isProfileCompleted(): Boolean {
+        return UserProfilePreferences.isProfileCompleted()
     }
 }
